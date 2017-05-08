@@ -58,15 +58,24 @@ public:
     DistanceCalculator(const Norma &norma) : _norma(norma) {}
 
     template<class T>
-    DistanceVector operator () (X_t center, const T &X) const
+    DistanceVector operator () (const X_t &center, const T &X) const
     {
         DistanceVector distances(getSize(X));
 
-        //        DistanceToCenterFunction distanceFunction = std::bind(&Norma::operator(), std::cref(_norma), center);
+//        DistanceToCenterFunction distanceFunction = std::bind(&Norma::operator(), std::cref(_norma), center, std::placeholders::_1);
 
-        std::transform(fcm::begin(X), fcm::end(X), std::begin(distances), [this, center] (const X_t &x) {
-            return _norma(center, x);
-        });
+//        std::transform(fcm::begin(X), fcm::end(X), std::begin(distances), distanceFunction);
+
+        std::transform(
+                    fcm::begin(X),
+                    fcm::end(X),
+                    std::begin(distances),
+                    std::bind(std::ref(_norma), center, std::placeholders::_1)
+                    );
+
+//        std::transform(fcm::begin(X), fcm::end(X), std::begin(distances), [this, center] (const X_t &x) {
+//            return _norma(center, x);
+//        });
 
         return distances;
     }
