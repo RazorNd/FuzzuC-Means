@@ -31,7 +31,7 @@ public:
         std::vector<DistanceCalculator::DistanceVector> distancesToCenters(_clustersCounts);
 
         while (std::abs(currentDesisionValue - previousDecisionValue) > _epsilon) {
-            previousDecisionValue = currentDesisionValue;
+            std::swap(currentDesisionValue, previousDecisionValue);
 
             auto centers = clusters.getCentersForX(X, _m);
 
@@ -42,9 +42,7 @@ public:
                         distanceCalculator
                         );
 
-            clusters.updatedClusterForDistances(distancesToCenters);
-
-            currentDesisionValue = clusters.getDesisionValue();
+            currentDesisionValue = clusters.updatedClusterForDistances(distancesToCenters, _m);
         }
     }
 };
