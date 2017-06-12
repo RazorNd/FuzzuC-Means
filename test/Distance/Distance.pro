@@ -9,18 +9,17 @@ QT       += testlib
 TARGET = tst_distancetest
 CONFIG   += console
 CONFIG   -= app_bundle
+CONFIG   += c++14
 
 TEMPLATE = app
 
 SOURCES += tst_distancetest.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
-HEADERS += \
-    xvector.h \
-    ximage.h
-
 RESOURCES += \
-    images.qrc
+    ../shared/images.qrc
 
 INCLUDEPATH += $$PWD/../../src/FuzzuC-Means
 DEPENDPATH += $$PWD/../../src/FuzzuC-Means
+
+INCLUDEPATH += $$PWD/../shared

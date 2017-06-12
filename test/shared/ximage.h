@@ -22,10 +22,10 @@ X_t getValue(const QImage& X, size_t k)
 
     QRgb rgb = X.pixel(x, y);
 
-    return X_t{
-                qRed(rgb)   / 255.0,
-                qGreen(rgb) / 255.0,
-                qBlue(rgb)  / 255.0
+    return X_t {
+        qRed(rgb)   / 255.0,
+        qGreen(rgb) / 255.0,
+        qBlue(rgb)  / 255.0
     };
 }
 
