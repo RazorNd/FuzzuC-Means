@@ -2,4 +2,5 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     src/FuzzuC-Means \
-    test/Distance
+    test/Distance \
+    test/Cluster
