@@ -23,7 +23,7 @@ public:
     }
 
     template<class T>
-    void operator () (const T& X) const
+    ClustersStorage::ClusterVecotor operator () (const T& X) const
     {
         ClustersStorage clusters(_clustersCounts, getSize(X));
         double previousDecisionValue = 0.0, currentDesisionValue = 1.0;
@@ -39,11 +39,13 @@ public:
                         std::begin(centers),
                         std::end(centers),
                         std::begin(distancesToCenters),
-                        distanceCalculator
+                        std::bind(distanceCalculator, std::placeholders::_1, X)
                         );
 
             currentDesisionValue = clusters.updatedClusterForDistances(distancesToCenters, _m);
         }
+
+        return clusters.getClusters();
     }
 };
 

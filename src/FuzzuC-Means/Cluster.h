@@ -28,6 +28,22 @@ private:
         return result;
     }
 
+    static ClusterVecotor randomClusterVector(unsigned int clustersCounts, size_t xSize)
+    {
+        ClusterVecotor result;
+        result.reserve(clustersCounts);
+
+        std::default_random_engine random_engine;
+        std::uniform_real_distribution<double> distributions(0.0, 1.0);
+
+        for (unsigned i = 0; i < clustersCounts; ++i) {
+            Cluster cluster(xSize);
+            std::generate(std::begin(cluster), std::end(cluster), std::bind(distributions, std::ref(random_engine)));
+            result.push_back(std::move(cluster));
+        }
+        return result;
+    }
+
     static double distance(const ClusterVecotor& a, const ClusterVecotor &b)
     {
         double result = 0.0;
@@ -45,14 +61,13 @@ public:
     ClustersStorage(unsigned int clustersCounts, size_t xSize)
         : clustersCounts(clustersCounts),
           clusterSize(xSize),
-          clusters(ClustersStorage::createClusterVector(clustersCounts, xSize))
+          clusters(ClustersStorage::randomClusterVector(clustersCounts, xSize))
     {        
     }
 
     template<class T>
     VectorX getCentersForX(const T &X, double w) const
-    {
-        const auto size = getSize(X);
+    {        
         VectorX result;
         result.reserve(clusters.size());
         X_t numerator;
@@ -94,7 +109,7 @@ public:
                     for (size_t f = 0; f < clustersCounts; f++) {
                         s += std::pow(distances[i][j] / distances[f][j], 2.0 / (w - 1));
                     }
-                    newClusters[i][j] = s;
+                    newClusters[i][j] = 1.0 / s;
                 }
             }
         }
@@ -102,6 +117,11 @@ public:
         std::swap(newClusters, clusters);
 
         return distance(newClusters, clusters);
+    }
+
+    ClusterVecotor getClusters() const
+    {
+        return clusters;
     }
 };
 
