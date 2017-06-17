@@ -25,12 +25,15 @@ QImage clusterToImage(const ClustersStorage::Cluster &cluster, const int width)
     size_t k = cluster.size();
     QImage result(width, k / width, QImage::Format_Alpha8);
 
-    for (size_t i = 0; i < k; ++i) {
-        double gray = cluster[i];
+    for (size_t i = 0; i < k; ++i) {        
         const int y = static_cast<int>(i / width),
                 x = static_cast<int>(i % width);
-        result.setPixel(x, y, gray * 255);
+        uint color = uint(cluster[i] * 512) << 24;
+        result.setPixel(x, y, color);
     }
+
+//    result.save(QString("cluster %1.png").arg(savenumber));
+
     return result;
 }
 
@@ -43,7 +46,8 @@ void setAlpha(QImage &image, const ClustersStorage::Cluster &cluster)
     for (size_t i = 0; i < size; ++i) {
         const int y = static_cast<int>(i / width),
                 x = static_cast<int>(i % width);
-        alpha.setPixel(x, y, cluster[i] * 255);
+        uint color = cluster[i] * 255;
+        alpha.setPixel(x, y, color);
     }
     image.setAlphaChannel(alpha);
 }
@@ -59,7 +63,7 @@ void FuzzuCMeansTest::operatorTest()
     for (int i = 0; i < 4; i++) {
         QImage clustered = image.copy();
         clustered.setAlphaChannel(clusterToImage(r[i], image.width()));
-        QVERIFY(clustered.save(QString("cluster %1.png").arg(i + 1)));
+        clustered.save(QString("cluster %1.png").arg(i + 1));
     }
 }
 
